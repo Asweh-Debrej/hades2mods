@@ -24,7 +24,8 @@ SS = 4  # supersampling factor
 C = SIZE * SS
 
 POM_TEXTURE = "Items/Loot/StackUpgrade.png"
-GOD_SYMBOL_TEXTURE = "GUI/Screens/BoonSelectSymbols/{god}.png"
+GOD_SYMBOL_TEXTURE = "GUI/Screens/BoonSelectSymbols/{god}.png"  # glowing symbol: used for the theme colour
+GOD_ICON_TEXTURE = "Items/Loot/Boon/{god}IconSpin/{god}IconSpin0015.png"  # front-facing boon coin: used in badges
 
 GOLD = [(0.0, (255, 246, 205)), (0.4, (246, 205, 96)), (0.75, (214, 150, 40)), (1.0, (150, 92, 18))]
 POM_GLOW = (255, 90, 70)
@@ -240,29 +241,23 @@ def infinity(canvas, center, width, thickness):
 
 
 def god_medallion(canvas, god, theme, center, radius):
-    """Round gold-rimmed badge holding the god's boon-select symbol."""
-    symbol = load_texture(GOD_SYMBOL_TEXTURE.format(god=god))
-    side = int(symbol.width * 0.27)  # tight around the emblem so it dominates the badge
-    off = (symbol.width - side) // 2
-    symbol = scaled(symbol.crop((off, off, off + side, off + side)), int(radius * 2.2))
-    symbol = ImageEnhance.Brightness(symbol).enhance(1.25)
-    # keep only the (nearly opaque) emblem and drop the game's glow, which would otherwise
-    # flood the badge for very bright symbols such as Zeus's; a subtle glow is re-added below
-    symbol.putalpha(symbol.getchannel("A").point(lambda a: max(0, min(255, (a - 170) * 255 // 60))))
+    """Round gold-rimmed badge holding the god's boon coin (the icon on floating boon pickups)."""
+    icon = trim(load_texture(GOD_ICON_TEXTURE.format(god=god)))
+    size = int(radius * 1.5)  # leaves a dark gap inside the gold ring
+    icon = scaled(icon, size) if icon.width >= icon.height else icon.resize((round(icon.width * size / icon.height), size), Image.LANCZOS)
 
     cx, cy = center
     disc = Image.new("L", (C, C), 0)
     ImageDraw.Draw(disc).ellipse([cx - radius, cy - radius, cx + radius, cy + radius], fill=255)
     canvas.alpha_composite(glow_layer(disc, theme, px(10), 0.8))
-    fill = radial_gradient(C, lerp((0, 0, 0), theme, 0.45), (8, 4, 12), center, radius * 1.1)
+    # dark neutral backing so the coin's own colours stand out
+    fill = radial_gradient(C, (34, 26, 40), (6, 4, 10), center, radius * 1.1)
     fill.putalpha(disc)
     canvas.alpha_composite(fill)
 
     inside = Image.new("RGBA", (C, C), (0, 0, 0, 0))
-    paste_center(inside, symbol, center)
+    paste_center(inside, icon, center)
     inside.putalpha(ImageChops.multiply(inside.getchannel("A"), disc))
-    halo = ImageChops.multiply(inside.getchannel("A").filter(ImageFilter.GaussianBlur(px(4))), disc)
-    canvas.alpha_composite(colored(halo, lerp(theme, (255, 255, 255), 0.3)))
     canvas.alpha_composite(inside)
 
     ring = Image.new("L", (C, C), 0)
@@ -325,6 +320,7 @@ def required_textures(specs):
     for spec in specs.values():
         for god in ([spec["god"]] if "god" in spec else []) + spec.get("gods", []):
             names.add(GOD_SYMBOL_TEXTURE.format(god=god))
+            names.add(GOD_ICON_TEXTURE.format(god=god))
     return names
 
 
