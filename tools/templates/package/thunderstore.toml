@@ -1,0 +1,39 @@
+[config]
+schemaVersion = "0.0.1"
+
+
+[package]
+namespace = "{{NAMESPACE}}"
+name = "{{NAME}}"
+versionNumber = "0.0.1"
+description = "{{DESCRIPTION}}"
+websiteUrl = "{{WEBSITE_URL}}"
+containsNsfwContent = false
+
+[package.dependencies]
+{{DEPENDENCIES}}
+
+[build]
+icon = "./icon.png"
+readme = "./README.md"
+outdir = "./build"
+
+[[build.copy]]
+source = "./CHANGELOG.md"
+target = "./CHANGELOG.md"
+
+[[build.copy]]
+source = "./LICENSE"
+target = "./LICENSE"
+{{SRC_COPY}}
+# Uncomment (remove the #) the three lines below if you have any files to copy to the plugins_data folder (like custom .pkg files)
+# [[build.copy]]
+# source = "./data"
+# target = "./plugins_data"
+
+[publish]
+repository = "https://thunderstore.io"
+communities = [ "hades-ii", ]
+
+[publish.categories]
+hades-ii = [ {{CATEGORIES}} ]

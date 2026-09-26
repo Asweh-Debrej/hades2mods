@@ -1,0 +1,7 @@
+{
+  "namespace": "AswehDebrej",
+  "gamePath": "D:\\Games\\Steam\\steamapps\\common\\Hades II",
+  "r2modmanGameDir": "%APPDATA%\\r2modmanPlus-local\\HadesII",
+  "devProfile": "Default",
+  "packageRoots": ["mods", "dev"]
+}

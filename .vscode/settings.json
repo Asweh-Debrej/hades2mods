@@ -1,0 +1,11 @@
+{
+  "files.eol": "\n",
+  "files.readonlyInclude": {
+    "reference/**": true
+  },
+  "search.followSymlinks": true,
+  "files.watcherExclude": {
+    "reference/**": true,
+    ".defs/**": true
+  }
+}

@@ -1,0 +1,13 @@
+---@meta _
+-- globals we define are private to our plugin!
+---@diagnostic disable: lowercase-global
+
+-- Runs ONCE, when the game's scripts are loaded. It is NOT re-run on hot reload.
+-- Register hooks here (modutil.mod.Path.Wrap, sjson.hook, game.OnControlPressed, ...)
+-- and have them call functions defined in reload.lua, so the logic stays hot-reloadable.
+--
+-- Example:
+-- modutil.mod.Path.Wrap("SetupMap", function(base, ...)
+-- 	on_setup_map()          -- defined in reload.lua
+-- 	return base(...)
+-- end)

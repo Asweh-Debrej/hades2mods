@@ -1,0 +1,3 @@
+# Use LF as default EOL marker (same as the official mod template)
+* text=auto eol=lf
+*.png binary
